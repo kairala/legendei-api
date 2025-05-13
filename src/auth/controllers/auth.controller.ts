@@ -93,7 +93,6 @@ export default class AuthController {
     const verifiedUser = this.jwtService.verify<{ email: string; id: string }>(
       refreshTokenDto.refreshToken,
     );
-    console.log('verifiedUser', verifiedUser);
 
     const oldRefreshToken = await this.authService.getRefreshTokenByEmail(
       verifiedUser.email,
