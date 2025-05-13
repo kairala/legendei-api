@@ -35,6 +35,7 @@ export class CaptionController {
     const user = await this.userService.findUserByEmail(
       request.user.email as string,
     );
+
     if (!user) {
       throw new NotFoundException();
     }

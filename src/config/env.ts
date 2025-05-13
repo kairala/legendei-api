@@ -6,7 +6,7 @@ export default async () => {
   const configService = new ConfigService();
   const nodeEnv = configService.get('NODE_ENV');
 
-  if (nodeEnv === 'development') {
+  if (nodeEnv !== 'production') {
     return devEnv;
   }
 

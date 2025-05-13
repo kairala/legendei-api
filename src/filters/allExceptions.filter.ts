@@ -21,6 +21,9 @@ export default class AllExceptionsFilter implements ExceptionFilter {
       bulkWriteError: 11000,
     };
 
+    console.error(exception);
+    console.error(exception.message);
+
     if (exception.code === mongodbCodes.bulkWriteError) {
       return res.status(HttpStatus.CONFLICT).json({
         statusCode: HttpStatus.CONFLICT,
