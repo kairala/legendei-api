@@ -21,6 +21,10 @@ export class User {
   @Prop()
   password: string;
 
+  @ApiProperty({ type: String })
+  @Prop({ required: true, default: '' })
+  name: string;
+
   @ApiProperty({ type: Boolean })
   @Prop()
   verified: boolean;

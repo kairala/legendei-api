@@ -86,7 +86,7 @@ export default class AuthController {
   @ApiUnauthorizedResponse({ description: '401. Token has been expired' })
   @ApiInternalServerErrorResponse({ description: '500. InternalServerError ' })
   @ApiBearerAuth()
-  @Post('refreshToken')
+  @Post('refresh-token')
   async refreshToken(
     @Body() refreshTokenDto: RefreshTokenDto,
   ): Promise<IAuthLoginOutput> {

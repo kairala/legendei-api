@@ -5,7 +5,7 @@ import OpenAI from 'openai';
 import {
   GenerateCaptionDto,
   GenerateCaptionRequestDto,
-} from './generateCaption.dto';
+} from '../dtos/generateCaption.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Caption } from '../../../db/schemas/caption.schema';
 import { Model } from 'mongoose';

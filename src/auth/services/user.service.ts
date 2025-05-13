@@ -19,7 +19,8 @@ export class UserService {
     const newUser = new this.userModel({
       password: hashedPassword,
       email: user.email,
-      verified: false,
+      verified: true,
+      name: user.name,
     });
 
     return newUser.save();

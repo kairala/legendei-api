@@ -9,6 +9,7 @@ import { CaptionController } from './controller/caption.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Caption, CaptionSchema } from '../../db/schemas/caption.schema';
 import { AuthModule } from '../../auth/auth.module';
+import { CaptionService } from './services/captions.service';
 
 @Module({
   controllers: [CaptionController],
@@ -31,6 +32,7 @@ import { AuthModule } from '../../auth/auth.module';
       inject: [ConfigService],
     },
     GenerateCaptionService,
+    CaptionService,
   ],
   imports: [
     MongooseModule.forFeature([{ name: Caption.name, schema: CaptionSchema }]),
