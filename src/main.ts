@@ -10,7 +10,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
   app.useGlobalFilters(new AllExceptionsFilter());
 
-  const port = process.env.SERVER_PORT || 3000;
+  const port = process.env.PORT || 3000;
 
   const options = new DocumentBuilder()
     .setTitle('Api v1')
@@ -23,7 +23,9 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
 
   await app.listen(port, () =>
-    console.log(`The server is running on ${port} port`),
+    console.log(
+      `The server is running on ${port} port in ${process.env.NODE_ENV} mode`,
+    ),
   );
 }
 void bootstrap();
