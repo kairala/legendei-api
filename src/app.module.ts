@@ -6,6 +6,7 @@ import { StorageModule } from './modules/storage/storage.module';
 import { IAModule } from './modules/ia/ia.module';
 import env from './config/env';
 import { HealthModule } from './health/health.module';
+import { StripeModule } from './modules/stripe/stripe.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { HealthModule } from './health/health.module';
     AuthModule,
     StorageModule,
     IAModule,
+    StripeModule,
   ],
   controllers: [],
   providers: [],

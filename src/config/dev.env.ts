@@ -7,4 +7,6 @@ export const devEnv: ENV_TYPE = {
   MONGO_DB_URL: process.env.MONGO_DB_URL!,
   OPENAI_API_KEY: process.env.OPENAI_API_KEY!,
   API_HOST: process.env.API_HOST!,
+  STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY!,
+  STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET!,
 };

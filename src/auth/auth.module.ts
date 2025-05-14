@@ -14,6 +14,7 @@ import { AuthService } from './services/auth.service';
 import LocalStrategy from './strategies/local.strategy';
 import JwtStrategy from './strategies/jwt.strategy';
 import GoogleStrategy from './strategies/google.strategy';
+import { Caption, CaptionSchema } from '../db/schemas/caption.schema';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import GoogleStrategy from './strategies/google.strategy';
     MongooseModule.forFeature([
       { name: User.name, schema: UserSchema },
       { name: UserRefreshToken.name, schema: UserRefreshTokenSchema },
+      { name: Caption.name, schema: CaptionSchema },
     ]),
   ],
   controllers: [AuthController],

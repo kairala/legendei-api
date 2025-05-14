@@ -42,6 +42,10 @@ export class UserService {
     return this.userModel.findOne({ email });
   }
 
+  async findByStripeCustomerId(stripeCustomerId: string): Promise<User | null> {
+    return this.userModel.findOne({ stripeCustomerId });
+  }
+
   async validateUser(
     email: string,
     password: string,

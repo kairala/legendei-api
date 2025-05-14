@@ -8,6 +8,8 @@ export enum EProviders {
   GITHUB = 'github',
 }
 
+export type Plans = 'gold' | 'platinum' | 'free';
+
 @Schema({ timestamps: true, collection: 'users' })
 export class User {
   @ApiProperty({ type: String })
@@ -32,6 +34,18 @@ export class User {
   @ApiProperty({ type: String, enum: EProviders })
   @Prop({ enum: EProviders })
   provider: EProviders;
+
+  @ApiProperty({ type: String })
+  @Prop({ nullable: true })
+  stripeCustomerId: string;
+
+  @ApiProperty({ type: String })
+  @Prop({ nullable: true, type: String })
+  stripeSubscriptionId: string | null;
+
+  @ApiProperty({ type: String })
+  @Prop({ nullable: true, default: 'free' })
+  currentPlan: Plans;
 }
 
 export type UserDocument = HydratedDocument<User>;

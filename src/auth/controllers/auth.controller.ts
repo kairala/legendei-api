@@ -35,6 +35,9 @@ import { RefreshTokenDto } from '../dto/refreshToken.dto';
 import { VerifyUserDto } from '../dto/verifyUser.dto';
 import JwtAuthGuard from '../../guards/jwtAuth.guard';
 import { Response } from 'express';
+import { Caption } from '../../db/schemas/caption.schema';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -43,6 +46,8 @@ export default class AuthController {
     private readonly authService: AuthService,
     private readonly jwtService: JwtService,
     private readonly usersService: UserService,
+    @InjectModel(Caption.name)
+    private readonly captionModel: Model<Caption>,
   ) {}
 
   @ApiBody({ type: SignInDto })
@@ -150,6 +155,44 @@ export default class AuthController {
     await this.usersService.update(foundUser._id, { verified: true });
 
     return true;
+  }
+
+  @Get('me')
+  @ApiOkResponse({ description: '200, returns user data' })
+  @ApiUnauthorizedResponse({ description: '401. Token has been expired' })
+  @ApiInternalServerErrorResponse({ description: '500. InternalServerError' })
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  async getMe(@Request() req: { user: IAuthLoginInput }) {
+    if (!req.user || !req.user.email) {
+      throw new UnauthorizedException(
+        'Authentication credentials were missing',
+      );
+    }
+
+    const user = await this.usersService.findUserByEmail(req.user.email);
+    if (!user) {
+      throw new NotFoundException('The user does not exist');
+    }
+
+    const usedCaptionsToday = await this.captionModel.countDocuments({
+      user: user._id,
+      createdAt: {
+        $gte: new Date(new Date().setHours(0, 0, 0, 0)),
+        $lt: new Date(new Date().setHours(23, 59, 59, 999)),
+      },
+    });
+
+    return {
+      id: user._id,
+      email: user.email,
+      name: user.name,
+      verified: user.verified,
+      currentPlan: user.currentPlan,
+      stripeCustomerId: user.stripeCustomerId,
+      stripeSubscriptionId: user.stripeSubscriptionId,
+      usedCaptionsToday,
+    };
   }
 
   @ApiOkResponse({ description: '200, returns new jwt tokens' })

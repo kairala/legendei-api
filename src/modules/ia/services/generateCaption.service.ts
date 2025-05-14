@@ -1,5 +1,5 @@
 import { ImageAnnotatorClient } from '@google-cloud/vision';
-import { Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { INVISION_PROVIDER, OPEN_AI_PROVIDER } from '../config/providers';
 import OpenAI from 'openai';
 import {
@@ -32,6 +32,30 @@ export class GenerateCaptionService {
       network = 'Instagram',
     }: GenerateCaptionRequestDto,
   ): Promise<GenerateCaptionDto> {
+    const captionsToday = await this.captionModel.countDocuments({
+      user: user._id,
+      createdAt: {
+        $gte: new Date(new Date().setHours(0, 0, 0, 0)),
+        $lt: new Date(new Date().setHours(23, 59, 59, 999)),
+      },
+    });
+
+    if (user.currentPlan === 'free') {
+      if (captionsToday >= 2) {
+        throw new BadRequestException(
+          'Você atingiu o limite de 2 legendas por dia no plano gratuito.',
+        );
+      }
+    }
+
+    if (user.currentPlan === 'gold') {
+      if (captionsToday >= 5) {
+        throw new BadRequestException(
+          'Você atingiu o limite de 5 legendas por dia no plano Gold.',
+        );
+      }
+    }
+
     const start = new Date(Date.now());
     const [result] = await this.vision.labelDetection(imageUrl);
     const labels = (result.labelAnnotations as any)
