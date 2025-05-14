@@ -19,7 +19,7 @@ export default class GoogleStrategy extends PassportStrategy(
     super({
       clientID: configService.getOrThrow<string>('GOOGLE_CLIENT_ID'),
       clientSecret: configService.getOrThrow<string>('GOOGLE_CLIENT_SECRET'),
-      callbackURL: 'http://localhost:3000/auth/google/redirect',
+      callbackURL: `${configService.getOrThrow<string>('API_HOST')}/auth/google/redirect`,
       scope: ['email', 'profile'],
     });
   }

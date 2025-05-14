@@ -4,4 +4,5 @@ export type ENV_TYPE = {
   GOOGLE_CLIENT_SECRET: string;
   AWS_S3_BUCKET: string;
   OPENAI_API_KEY: string;
+  API_HOST: string;
 };

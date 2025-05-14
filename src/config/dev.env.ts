@@ -6,4 +6,5 @@ export const devEnv: ENV_TYPE = {
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET!,
   MONGO_DB_URL: process.env.MONGO_DB_URL!,
   OPENAI_API_KEY: process.env.OPENAI_API_KEY!,
+  API_HOST: process.env.API_HOST!,
 };
