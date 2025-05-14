@@ -11,6 +11,7 @@ import {
   UnauthorizedException,
   UseGuards,
   Request,
+  Res,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -33,6 +34,7 @@ import OkResponseDto from '../../dto/okResponse.dto';
 import { RefreshTokenDto } from '../dto/refreshToken.dto';
 import { VerifyUserDto } from '../dto/verifyUser.dto';
 import JwtAuthGuard from '../../guards/jwtAuth.guard';
+import { Response } from 'express';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -78,8 +80,18 @@ export default class AuthController {
   @ApiInternalServerErrorResponse({ description: '500. InternalServerError' })
   @Get('google/redirect')
   @UseGuards(GoogleAuthGuard)
-  googleAuthRedirect(@Req() req: { user: IAuthLoginInput }) {
-    return this.authService.login(req.user);
+  async googleAuthRedirect(
+    @Req() req: { user: IAuthLoginInput },
+    @Res() res: Response,
+  ) {
+    const tokens = await this.authService.login(req.user);
+
+    const searchParams = new URLSearchParams();
+
+    searchParams.append('accessToken', tokens?.accessToken);
+    searchParams.append('refreshToken', tokens.refreshToken);
+
+    res.redirect(`legendei://?${searchParams.toString()}`);
   }
 
   @ApiOkResponse({ description: '200, returns new jwt tokens' })

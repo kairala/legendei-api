@@ -5,6 +5,7 @@ import { Model, ObjectId } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { IAuthValidateUserOutput } from '../types/validate.type';
 import { CreateUserDto } from '../dto/signUp.dto';
+import { GoogleProfile } from '../types/googleProfile';
 
 @Injectable()
 export class UserService {
@@ -21,6 +22,17 @@ export class UserService {
       email: user.email,
       verified: true,
       name: user.name,
+    });
+
+    return newUser.save();
+  }
+
+  async createFromGoogle(profile: GoogleProfile): Promise<User> {
+    const newUser = new this.userModel({
+      email: profile.emails[0].value,
+      verified: true,
+      provider: EProviders.GOOGLE,
+      name: profile.displayName,
     });
 
     return newUser.save();
