@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsString, Max, Min } from 'class-validator';
+import { IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 
 export class GenerateCaptionDto {
   @ApiProperty({ description: 'Legenda gerada para a imagem fornecida' })
@@ -28,12 +28,14 @@ export class GenerateCaptionRequestDto {
   @IsInt()
   @Min(50)
   @Max(500)
-  numberOfCharacters: number;
+  @IsOptional()
+  numberOfCharacters?: number;
 
   @ApiProperty({
     description: 'Palavras-chave que devem ser incluídas na legenda',
     default: [],
   })
   @IsString({ each: true })
-  keywords: string[];
+  @IsOptional()
+  keywords?: string[];
 }
