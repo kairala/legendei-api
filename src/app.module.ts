@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, RequestMethod } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './auth/auth.module';
@@ -7,6 +7,7 @@ import { IAModule } from './modules/ia/ia.module';
 import env from './config/env';
 import { HealthModule } from './health/health.module';
 import { StripeModule } from './modules/stripe/stripe.module';
+import { LoggerModule } from 'nestjs-pino';
 
 @Module({
   imports: [
@@ -19,6 +20,25 @@ import { StripeModule } from './modules/stripe/stripe.module';
       useFactory: (configService: ConfigService) => ({
         uri: configService.getOrThrow<string>('MONGO_DB_URL'),
       }),
+    }),
+    LoggerModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        return {
+          pinoHttp: {
+            level: configService.get('LOG_LEVEL') || 'info',
+            transport:
+              configService.get('NODE_ENV') === 'production'
+                ? undefined
+                : { target: 'pino-pretty' },
+            redact: ['req.headers.authorization'],
+          },
+          exclude: [
+            { method: RequestMethod.OPTIONS, path: '*' },
+            { method: RequestMethod.ALL, path: '/health' },
+          ],
+        };
+      },
     }),
     HealthModule,
     AuthModule,
