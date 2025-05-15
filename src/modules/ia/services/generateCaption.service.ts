@@ -30,6 +30,8 @@ export class GenerateCaptionService {
       imageUrl,
       style = 'criativo',
       network = 'Instagram',
+      keywords = [],
+      numberOfCharacters = 150,
     }: GenerateCaptionRequestDto,
   ): Promise<GenerateCaptionDto> {
     const captionsToday = await this.captionModel.countDocuments({
@@ -58,14 +60,21 @@ export class GenerateCaptionService {
 
     const start = new Date(Date.now());
     const [result] = await this.vision.labelDetection(imageUrl);
+
     const labels = (result.labelAnnotations as any)
       .map((label: any) => label.description)
       .join(', ');
 
+    let keywordsString = '';
+    const joinedKeywords = keywords.join(', ');
+    if (user.currentPlan !== 'free' && keywords.length > 0) {
+      keywordsString = `, e as palavras-chave: ${joinedKeywords}`;
+    }
+
     const prompt = `
-      Você é um gerador de legendas de redes sociais. Crie uma legenda para uma imagem com os seguintes elementos: ${labels}.
+      Você é um gerador de legendas de redes sociais. Crie uma legenda para uma imagem com os seguintes elementos: ${labels}${keywordsString}.
       Estilo: ${style}. Rede social: ${network}.
-      Use até 150 caracteres e inclua até 2 hashtags no final.`;
+      Use até ${user.currentPlan !== 'free' ? numberOfCharacters : 150} caracteres e inclua até 2 hashtags no final.`;
 
     const completion = await this.openAi.responses.create({
       model: GPT_MODEL,
