@@ -8,9 +8,11 @@ import env from './config/env';
 import { HealthModule } from './health/health.module';
 import { StripeModule } from './modules/stripe/stripe.module';
 import { LoggerModule } from 'nestjs-pino';
+import { SentryModule } from '@sentry/nestjs/setup';
 
 @Module({
   imports: [
+    SentryModule.forRoot(),
     ConfigModule.forRoot({
       isGlobal: true,
       load: [env],

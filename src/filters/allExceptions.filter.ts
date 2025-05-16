@@ -9,10 +9,12 @@ import {
   ConflictException,
   BadRequestException,
 } from '@nestjs/common';
+import { SentryExceptionCaptured } from '@sentry/nestjs';
 import { Response } from 'express';
 
 @Catch()
 export default class AllExceptionsFilter implements ExceptionFilter {
+  @SentryExceptionCaptured()
   catch(exception: any, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const res = ctx.getResponse<Response>();
