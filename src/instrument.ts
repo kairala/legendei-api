@@ -7,7 +7,7 @@ if (process.env.SENTRY_DSN) {
     dsn: process.env.SENTRY_DSN,
     environment: process.env.NODE_ENV,
     sendDefaultPii: true,
-    tracesSampleRate: 1.0,
+    tracesSampleRate: 0.2,
   });
 } else {
   console.log('No Sentry DSN found, skipping Sentry initialization.');
