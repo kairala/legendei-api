@@ -9,14 +9,22 @@ import { HealthModule } from './health/health.module';
 import { StripeModule } from './modules/stripe/stripe.module';
 import { LoggerModule } from 'nestjs-pino';
 import { SentryModule } from '@sentry/nestjs/setup';
-import { SentryController } from './test';
-
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
 @Module({
   imports: [
     SentryModule.forRoot(),
     ConfigModule.forRoot({
       isGlobal: true,
       load: [env],
+    }),
+    ThrottlerModule.forRoot({
+      throttlers: [
+        {
+          ttl: 60000,
+          limit: 10,
+        },
+      ],
     }),
     MongooseModule.forRootAsync({
       inject: [ConfigService],
@@ -49,7 +57,12 @@ import { SentryController } from './test';
     IAModule,
     StripeModule,
   ],
-  controllers: [SentryController],
-  providers: [],
+  controllers: [],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+  ],
 })
 export class AppModule {}
