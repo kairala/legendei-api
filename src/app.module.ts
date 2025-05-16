@@ -9,6 +9,7 @@ import { HealthModule } from './health/health.module';
 import { StripeModule } from './modules/stripe/stripe.module';
 import { LoggerModule } from 'nestjs-pino';
 import { SentryModule } from '@sentry/nestjs/setup';
+import { SentryController } from './test';
 
 @Module({
   imports: [
@@ -48,7 +49,7 @@ import { SentryModule } from '@sentry/nestjs/setup';
     IAModule,
     StripeModule,
   ],
-  controllers: [],
+  controllers: [SentryController],
   providers: [],
 })
 export class AppModule {}
