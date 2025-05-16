@@ -6,8 +6,6 @@ if (process.env.SENTRY_DSN) {
   Sentry.init({
     dsn: process.env.SENTRY_DSN,
     environment: process.env.NODE_ENV,
-    // Adds request headers and IP for users, for more info visit:
-    // https://docs.sentry.io/platforms/javascript/guides/nestjs/configuration/options/#sendDefaultPii
     sendDefaultPii: true,
   });
 } else {
