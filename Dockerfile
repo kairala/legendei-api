@@ -9,6 +9,11 @@ RUN npm install -g pnpm@${PNPM_VERSION}
 
 
 FROM alpine AS builder
+
+ARG SENTRY_AUTH_TOKEN_ARG
+
+ENV SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN_ARG}
+
 RUN corepack enable
 RUN npm install turbo --global
 RUN pnpm config set store-dir ~/.pnpm-store
@@ -20,7 +25,9 @@ COPY package.json pnpm-lock.yaml ./
 COPY . .
 
 RUN pnpm install --frozen-lockfile
+
 RUN pnpm build
+RUN pnpm sentry:sourcemaps
 
 
 FROM builder AS dependencies

@@ -28,7 +28,7 @@ jobs:
       - name: Build Docker Image (API)
         run: |
           IMAGE_TAG=${GITHUB_REF_NAME}
-          docker build -t ${{ secrets.ECR_REPOSITORY }}:$IMAGE_TAG .
+          docker build --build-arg SENTRY_AUTH_TOKEN_ARG=${{ secrets.SENTRY_AUTH_TOKEN }} -t ${{ secrets.ECR_REPOSITORY }}:$IMAGE_TAG .
 
       - name: Push Docker Image to ECR (Backend)
         run: |
