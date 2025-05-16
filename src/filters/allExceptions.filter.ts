@@ -9,6 +9,7 @@ import {
   ConflictException,
   BadRequestException,
 } from '@nestjs/common';
+import { ThrottlerException } from '@nestjs/throttler';
 import { SentryExceptionCaptured } from '@sentry/nestjs';
 import { Response } from 'express';
 
@@ -39,6 +40,7 @@ export default class AllExceptionsFilter implements ExceptionFilter {
       exception instanceof UnauthorizedException ||
       exception instanceof BadRequestException ||
       exception instanceof ConflictException ||
+      exception instanceof ThrottlerException ||
       exception.code === 'ValidationException'
     ) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
